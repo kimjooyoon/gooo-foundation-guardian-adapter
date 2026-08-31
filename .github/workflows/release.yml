@@ -1,0 +1,35 @@
+name: Durable adapter release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Go 1.27
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.27.x'
+      - name: Publish immutable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/release.sh
+      - name: Upload release verification
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gooo-foundation-guardian-adapter-release-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/gooo-foundation-guardian-adapter-release-${{ github.run_id }}
+            ${{ runner.temp }}/gooo-foundation-guardian-adapter-${{ github.run_id }}/ci-report.json
+          if-no-files-found: error
+          retention-days: 30
