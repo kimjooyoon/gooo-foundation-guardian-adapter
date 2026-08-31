@@ -1,0 +1,24 @@
+graph guardian-adapter version=0.1.0
+states CLOSED UNKNOWN REFUTED precedence=REFUTED>UNKNOWN>CLOSED
+inventory root_readme=README.md files=excluded physical_lines=excluded other_readmes=retained
+axis FOUNDATION meaning=immutable-issuer-release-ed25519-receipt-and-rotation
+axis COHERENCE meaning=exact-pr619-tuple-and-current-guardian-contract
+axis REGRESSION meaning=single-use-replay-revocation-and-authority-boundary
+cell 01 axis=FOUNDATION signal=issuer_release_unavailable state=UNKNOWN
+cell 02 axis=FOUNDATION signal=issuer_release_immutable_exact state=CLOSED
+cell 03 axis=FOUNDATION signal=ed25519_signature_invalid state=REFUTED
+cell 04 axis=FOUNDATION signal=rotation_release_mismatch state=REFUTED
+cell 05 axis=COHERENCE signal=pr619_tuple_mismatch state=REFUTED
+cell 06 axis=COHERENCE signal=legacy_guardian_input_mismatch state=UNKNOWN
+cell 07 axis=COHERENCE signal=accepted_guardian_input_unobserved state=UNKNOWN
+cell 08 axis=COHERENCE signal=exact_verified_proposal_input state=CLOSED
+cell 09 axis=REGRESSION signal=replay_detected state=REFUTED
+cell 10 axis=REGRESSION signal=revoked_key state=REFUTED
+cell 11 axis=REGRESSION signal=external_human_independence_unobserved state=UNKNOWN
+cell 12 axis=REGRESSION signal=oidc_signature_unverified state=UNKNOWN
+transition candidate->verified on exact_release_signature_tuple_rotation
+transition verified->PROPOSED_ONLY on legacy_guardian_input_mismatch
+transition verified->accepted on exact_guardian_consumer_contract
+transition any->REFUTED on signature_invalid
+transition any->REFUTED on replay_detected
+transition any->UNKNOWN on external_human_independence_unobserved
