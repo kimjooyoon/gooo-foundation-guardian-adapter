@@ -54,9 +54,9 @@ EOF
 cat > "$release_dir/bundle/dossier.md" <<EOF
 # gooo-foundation-guardian-adapter $version dossier
 
-- source commit: `$base_sha`
-- issuer: immutable `gooo-foundation-issuer v0.1.1`
-- rotation: immutable `gooo-foundation-rotation v0.1.2`
+- source commit: $base_sha
+- issuer: immutable gooo-foundation-issuer v0.1.1
+- rotation: immutable gooo-foundation-rotation v0.1.2
 - verified signature: true
 - verified PR #619 tuple: true
 - current Guardian input exact: false
@@ -73,7 +73,7 @@ release_id=$(jq -r .id <<<"$release_json")
 gh release upload "$version" --repo "$repository" "$release_dir/assets/gooo-foundation-guardian-adapter-evidence-v0.1.0.tar.gz" "$release_dir/assets/gooo-foundation-guardian-adapter-linux-amd64"
 gh api "repos/$repository/releases/$release_id" -X PATCH -f draft=false >/dev/null
 
-release=$(gh api "repos/$repository/releases/$version")
+release=$(gh api "repos/$repository/releases/tags/$version")
 tag_ref=$(gh api "repos/$repository/git/ref/tags/$version")
 tag_object_observed=$(jq -r '.object.sha' <<<"$tag_ref")
 tag_target_observed=$(gh api "repos/$repository/git/tags/$tag_object_observed" --jq '.object.sha')

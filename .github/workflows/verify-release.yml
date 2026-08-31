@@ -1,0 +1,27 @@
+name: Verify immutable adapter release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Verify published release and assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/verify-durable-release.sh v0.1.0
+      - name: Upload release audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gooo-foundation-guardian-adapter-release-audit-${{ github.run_id }}
+          path: ${{ runner.temp }}/gooo-foundation-guardian-adapter-release-audit-${{ github.run_id }}
+          if-no-files-found: error
+          retention-days: 30
