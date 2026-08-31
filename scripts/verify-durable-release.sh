@@ -41,6 +41,6 @@ for name in "${asset_names[@]}"; do
   verified_assets=$(jq --argjson item "$(jq -c --arg name "$name" '.[]|select(.name==$name)' <<<"$assets")" '. + [$item]' <<<"$verified_assets")
 done
 
-jq -n --arg schema 'gooo/foundation-guardian-adapter/durable-release-verification/v1' --arg repository "$repository" --arg version "$version" --argjson release_id "$release_id" --arg tag_object_sha "$tag_object" --arg target_commit "$target" --argjson assets "$verified_assets" '{schema:$schema,repository:$repository,version:$version,release_id:$release_id,immutable:true,annotated_tag:true,tag_object_sha:$tag_object,target_commit:$target,assets:$assets,asset_digests_verified_after_download:true}' > "$out_dir/durable-release-verification.json"
+jq -n --arg schema 'gooo/foundation-guardian-adapter/durable-release-verification/v1' --arg repository "$repository" --arg version "$version" --argjson release_id "$release_id" --arg tag_object "$tag_object" --arg target "$target" --argjson assets "$verified_assets" '{schema:$schema,repository:$repository,version:$version,release_id:$release_id,immutable:true,annotated_tag:true,tag_object_sha:$tag_object,target_commit:$target,assets:$assets,asset_digests_verified_after_download:true}' > "$out_dir/durable-release-verification.json"
 jq . "$out_dir/durable-release-verification.json"
 echo "audit-dir=$out_dir"
